@@ -5,7 +5,7 @@ const BorderedBox = styled.div`
 
 `;
 
-export default function App() {
+export default function Task() {
 
   return (
     <>
