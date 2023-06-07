@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { 
-  Container, Form, TextInput, 
+import React, { useState, useEffect } from 'react';
+import {
+  Container, Form, TextInput,
   SubmitInput, UnorderdList, ListItem,
   TodoText, TodoDelete } from './styledComponents'
 import './todo.css'
@@ -29,6 +29,21 @@ export default function TodoApp() {
     setTodo(todo.map(item => item.todoId === todoId ? { ...item, todoDone: !item.todoDone } : item))
   }
 
+  useEffect(() => {
+    const defaultTodo = JSON.parse(localStorage.getItem("todo"))
+
+    if(!defaultTodo) return;
+
+    setTodo(defaultTodo)
+    if(defaultTodo.length !== 0 ){
+      setTodoId(defaultTodo[defaultTodo.length - 1].todoId + 1)
+    }
+  }, [])
+
+  useEffect(() => {
+    localStorage.setItem("todo", JSON.stringify(todo))
+  }, [todo])
+
   return (
     <Container>
       <Form onSubmit={(e) => {
@@ -40,13 +55,13 @@ export default function TodoApp() {
         <SubmitInput type='submit' value='추가' />
       </Form>
       <UnorderdList>
-        {todo.map((item, index) => 
+        {todo.map((item, index) =>
         <ListItem key={index}>
           <TodoText onClick={() => handleToggle(item.todoId)} style={item.todoDone ? { textDecoration: 'line-through'} : {} }>
             {item.todoText}
           </TodoText>
           <TodoDelete onClick={() => handleDelete(item.todoId)}>X</TodoDelete>
-        </ListItem>)} 
+        </ListItem>)}
       </UnorderdList>
     </Container>
   );
